@@ -3,7 +3,7 @@
   "description": "NakoPay gateway driver for Invoice Ninja",
   "type": "invoiceninja-gateway",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "require": {
     "php": ">=8.0",
     "nakopay/sdk": "^0.1"
