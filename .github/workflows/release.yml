@@ -1,0 +1,33 @@
+name: Release plugin-invoiceninja
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate no internal URLs leaked
+        run: bash ./scripts/check-no-internal-urls.sh ./
+      - name: Stage as 'nakopay-invoiceninja/'
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='build' \
+            --exclude='*.zip' \
+            ./ "build/nakopay-invoiceninja/"
+      - name: Build zip
+        run: |
+          cd build
+          zip -r "../nakopay-invoiceninja.zip" "nakopay-invoiceninja"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: nakopay-invoiceninja.zip
+          generate_release_notes: true
